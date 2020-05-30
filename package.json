@@ -1,0 +1,62 @@
+{
+  "name": "vege-data",
+  "version": "0.1.0",
+  "description": "Simple SQLLite ORM for nodejs based on sql-template-strings and sqlite",
+  "main": "src/index.js",
+  "scripts": {
+    "eslint": "eslint src/**/*.js tests/**/*.js",
+    "test": "jest",
+    "validate": "npm run eslint && npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BibiFock/vege-data.git"
+  },
+  "keywords": [
+    "nodejs",
+    "ORM",
+    "SQLite"
+  ],
+  "author": "bibifock",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BibiFock/vege-data/issues"
+  },
+  "jest": {
+    "testMatch": [
+      "**/*.test.js"
+    ],
+    "modulePaths": [
+      "src/",
+      "tests/"
+    ],
+    "watchPathIgnorePatterns": [
+      "build/"
+    ],
+    "moduleFileExtensions": [
+      "js"
+    ]
+  },
+  "homepage": "https://github.com/BibiFock/vege-data#readme",
+  "dependencies": {
+    "eslint-plugin-node": "11.1.0",
+    "sql-template-strings": "2.2.2",
+    "sqlite": "4.0.9",
+    "sqlite3": "4.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.10.1",
+    "@babel/core": "7.10.1",
+    "@babel/plugin-transform-async-to-generator": "7.10.1",
+    "@babel/plugin-transform-runtime": "7.10.1",
+    "@babel/preset-env": "7.10.1",
+    "babel-eslint": "10.1.0",
+    "babel-plugin-module-resolver": "4.0.0",
+    "eslint": "7.1.0",
+    "eslint-config-standard": "14.1.1",
+    "eslint-plugin-import": "2.20.2",
+    "eslint-plugin-jest": "23.13.2",
+    "eslint-plugin-promise": "4.2.1",
+    "jest": "26.0.1"
+  }
+}
