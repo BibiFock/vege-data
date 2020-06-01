@@ -61,8 +61,10 @@ model.queries.select() // return sql-template-string object used for a standard 
 model.queries.insertOrReplace() // return sql-template-string object used for save
 
 // function
+model.all() // return all component
 model.get(id);
 model.getAll(ids);
+model.findBy(field, value);
 model.save(data);
 models.saveAll(datas)
 ```

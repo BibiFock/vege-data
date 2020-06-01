@@ -25,6 +25,10 @@ const makeQueries = ({ fields, table }) => {
 };
 
 const makeGetter = ({ exec, queries, primaryKey }) => ({
+  all: () => exec(
+    'all',
+    queries.select()
+  ),
   get: id => exec('get', queries.select()
     .append(' WHERE ' + primaryKey + '=')
     .append(SQL`${id}`)
@@ -37,9 +41,11 @@ const makeGetter = ({ exec, queries, primaryKey }) => ({
 
     return exec('all', query);
   },
-  all: () => exec(
+  findBy: (field, value) => exec(
     'all',
     queries.select()
+      .append(' WHERE ' + field + ' =')
+      .append(SQL`${value}`)
   )
 });
 

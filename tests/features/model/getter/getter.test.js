@@ -79,4 +79,15 @@ describe('Model->getters', () => {
       );
     });
   });
+
+  describe('findBy', () => {
+    it('should return all element with a value', () => {
+      expect(
+        model.findBy('type', 'sayan')
+      ).resolves.toEqual([
+        { name: 'vegeta', type: 'sayan' },
+        { name: 'sangoku', type: 'sayan' }
+      ]);
+    });
+  });
 });
