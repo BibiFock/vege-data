@@ -41,7 +41,6 @@
   },
   "homepage": "https://github.com/BibiFock/vege-data#readme",
   "dependencies": {
-    "eslint-plugin-node": "11.1.0",
     "sql-template-strings": "2.2.2",
     "sqlite": "4.0.9",
     "sqlite3": "4.2.0"
@@ -58,6 +57,7 @@
     "eslint-config-standard": "14.1.1",
     "eslint-plugin-import": "2.20.2",
     "eslint-plugin-jest": "23.13.2",
+    "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "4.2.1",
     "jest": "26.0.1",
     "rimraf": "3.0.2"

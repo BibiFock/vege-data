@@ -1,14 +1,6 @@
 import SQL from 'sql-template-strings';
 
-const concatValues = (items, each) => {
-  const query = SQL``;
-  items.forEach(
-    (item, index) => query
-      .append(index > 0 ? ', ' : '')
-      .append(each ? each(item) : SQL`${item}`)
-  );
-  return query;
-};
+import { concatValues } from '../helpers';
 
 const makeExec = (connect) => (action, query) => connect()
   .then(db => db[action](query));
@@ -83,7 +75,7 @@ const init = (connect) => (config) => {
   const {
     fields,
     table,
-    primaryKey = 'rowId',
+    primaryKey = 'rowid',
   } = config;
   const exec = makeExec(connect)
   const queries = makeQueries({ fields, table });
