@@ -4,7 +4,7 @@ import { getTmpDb } from 'utils';
 
 describe('Model->getters', () => {
   let vegeData, db, model;
-  beforeEach(async () => {
+  beforeAll(async () => {
     vegeData = VegeData({ filename: getTmpDb() });
 
     db = await vegeData.connect();
@@ -24,6 +24,9 @@ describe('Model->getters', () => {
         ('sangoku', 'sayan'),
         ('bulma', 'human');
     `);
+  });
+
+  beforeEach(async () => {
 
     model = vegeData.model.init({
       table: 'characters',

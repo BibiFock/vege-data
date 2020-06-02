@@ -9,6 +9,7 @@ Simple ORM for nodejs, based on [sql-template-string](https://github.com/felixfb
     - [Model](#usage-model)
         - [Definition](#usage-model-definition)
         - [Usage](#usage-model-usage)
+    - [Helpers](#usage-helpers)
 - [Devlopment](#dev)
     - [Installation](#dev-install)
     - [Tests](#dev-tests)
@@ -24,7 +25,7 @@ Simple ORM for nodejs, based on [sql-template-string](https://github.com/felixfb
 const vegeData = VegeData({ filename: <your sqlite filename> });
 ```
 
-## Get connection
+## Connection
 
 __db__ is an [sqlite](https://github.com/kriasoft/node-sqlite#readme) object
 
@@ -68,6 +69,27 @@ model.findBy(field, value);
 model.save(data);
 models.saveAll(datas)
 ```
+
+
+## Helpers
+
+```js
+import { helpers } from 'vege-data';
+
+// concat value
+model.queries.select()
+ .append(' WHERE id IN (')
+ .append(helpers.concatValue([1, 2, 3]))
+
+// custom element
+const items = [{ id: 1}, { id: 2 }];
+model.queries.select()
+ .append(' WHERE id IN (')
+ .append(helpers.concatValue(items, ({ id }) => id))
+ .append(')');
+
+```
+
 
 # Devlopment
 ## Installation

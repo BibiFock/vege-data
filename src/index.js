@@ -3,6 +3,10 @@ import { open } from 'sqlite';
 
 import model from './model/model';
 
+import { concatValues } from './helpers';
+
+export { concatValues };
+
 export default ({ filename }) => {
   const dbParams = {
     filename,
@@ -21,9 +25,7 @@ export default ({ filename }) => {
   }
 
   const migrate = () => connect()
-    .then(db => db.migrate({ force: 'last' }))
-  // eslint-disable-next-line no-console
-    .catch(e => console.error('Failed: ' + e.message));
+    .then(db => db.migrate({ force: 'last' }));
 
   return {
     connect,
