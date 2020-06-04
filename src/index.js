@@ -7,7 +7,7 @@ import { concatValues } from './helpers';
 
 export { concatValues };
 
-export default ({ filename }) => {
+export default ({ filename, queryLogger }) => {
   const dbParams = {
     filename,
     driver: sqlite3.Database
@@ -29,7 +29,7 @@ export default ({ filename }) => {
 
   return {
     connect,
-    model: model(connect),
+    model: model({ connect, log: queryLogger }),
     migrate
   };
 };

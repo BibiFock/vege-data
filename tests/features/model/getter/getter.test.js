@@ -7,6 +7,11 @@ describe('Model->getters', () => {
   beforeAll(async () => {
     vegeData = VegeData({ filename: getTmpDb() });
 
+    model = vegeData.model.init({
+      table: 'characters',
+      fields: ['name', 'type']
+    });
+
     db = await vegeData.connect();
 
     await db.run(`
@@ -24,14 +29,6 @@ describe('Model->getters', () => {
         ('sangoku', 'sayan'),
         ('bulma', 'human');
     `);
-  });
-
-  beforeEach(async () => {
-
-    model = vegeData.model.init({
-      table: 'characters',
-      fields: ['name', 'type']
-    });
   });
 
   describe('all', () => {

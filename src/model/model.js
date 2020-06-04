@@ -2,8 +2,14 @@ import SQL from 'sql-template-strings';
 
 import { concatValues } from '../helpers';
 
-const makeExec = (connect) => (action, query) => connect()
-  .then(db => db[action](query));
+const makeExec = ({ connect, log }) => (action, query) => connect()
+  .then(db => {
+    if (log) {
+      log({ db, action, query });
+    }
+
+    return db[action](query)
+  });
 
 const makeQueries = ({ fields, table }) => {
   const fieldsList = fields.join(', ');
@@ -71,13 +77,13 @@ const makeStore = ({ exec, queries, fields }) => {
  *
  * @return {object}
  */
-const init = (connect) => (config) => {
+const init = ({ connect, log }) => (config) => {
   const {
     fields,
     table,
     primaryKey = 'rowid',
   } = config;
-  const exec = makeExec(connect)
+  const exec = makeExec({ connect, log })
   const queries = makeQueries({ fields, table });
 
   return {
