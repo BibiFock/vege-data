@@ -91,7 +91,7 @@ model.queries.select()
 ```
 
 
-# Devlopment
+# Development
 ## Installation
 
 ```sh
