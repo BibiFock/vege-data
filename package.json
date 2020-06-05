@@ -1,6 +1,6 @@
 {
   "name": "vege-data",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "description": "Simple SQLLite ORM for nodejs based on sql-template-strings and sqlite",
   "main": "./lib/index.js",
   "scripts": {
@@ -43,7 +43,8 @@
   "dependencies": {
     "sql-template-strings": "2.2.2",
     "sqlite": "4.0.9",
-    "sqlite3": "4.2.0"
+    "sqlite3": "4.2.0",
+    "rimraf": "3.0.2"
   },
   "devDependencies": {
     "@babel/cli": "7.10.1",
@@ -59,7 +60,6 @@
     "eslint-plugin-jest": "23.13.2",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "4.2.1",
-    "jest": "26.0.1",
-    "rimraf": "3.0.2"
+    "jest": "26.0.1"
   }
 }
