@@ -22,7 +22,11 @@ Simple ORM for nodejs, based on [sql-template-string](https://github.com/felixfb
 
 ## Connect to database
 ```js
-const vegeData = VegeData({ filename: <your sqlite filename> });
+const vegeData = VegeData({
+  filename: <your sqlite filename>,
+  // log every model requests
+  queryLogger: ({ db, action, query }) => console.log({ db, action, query })
+});
 ```
 
 ## Connection

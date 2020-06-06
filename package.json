@@ -1,6 +1,6 @@
 {
   "name": "vege-data",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "description": "Simple SQLLite ORM for nodejs based on sql-template-strings and sqlite",
   "main": "./lib/index.js",
   "scripts": {
