@@ -63,8 +63,8 @@ describe('Model->getters', () => {
 
   describe('getAll', () => {
     const couple = [
-      { name: 'bulma', type: 'human' },
-      { name: 'vegeta', type:'sayan' }
+      { name: 'vegeta', type:'sayan' },
+      { name: 'bulma', type: 'human' }
     ];
 
     it('should return all asked ids', () => {
@@ -88,6 +88,35 @@ describe('Model->getters', () => {
         { name: 'vegeta', type: 'sayan' },
         { name: 'sangoku', type: 'sayan' }
       ]);
+    });
+  });
+
+  describe('orderBy, should sort answer for multiple response', () => {
+    describe.each([
+      'ASC',
+      'DESC'
+    ])('%s', (order) => {
+      let model
+      beforeAll(() => {
+        model = vegeData.model.init({
+          table: 'characters',
+          fields: ['name', 'type'],
+          orderBy: `name ${order}`,
+          primaryKey: 'name'
+        });
+      });
+
+      it.each([
+        ['all', '', []],
+        ['getAll', `WHERE name IN ('vegeta', 'goku')`, [['vegeta', 'goku']]],
+        ['findBy', `WHERE type = 'sayan'`, ['type','sayan']]
+      ])('%s', async (func, conds, args) => {
+        const wanted = await db.all(`SELECT name, type FROM characters ${conds} ORDER BY name ${order}`),
+
+        result = await model[func](...args);
+
+        expect(result).toEqual(wanted);
+      });
     });
   });
 });

@@ -3,16 +3,16 @@ Simple ORM for nodejs, based on [sql-template-string](https://github.com/felixfb
 
 <!-- TOC -->
 - [Usage](#usage)
-  - [Connect to database](#usage-connection)
-    - [Connection](#usage-connection-get)
-    - [Migrations](#usage-migrations)
-    - [Model](#usage-model)
-        - [Definition](#usage-model-definition)
-        - [Usage](#usage-model-usage)
-    - [Helpers](#usage-helpers)
-- [Devlopment](#dev)
-    - [Installation](#dev-install)
-    - [Tests](#dev-tests)
+  - [Connect to database](#connect-to-database)
+    - [Connection](#connection)
+    - [Migrations](#migrations)
+    - [Model](#model)
+        - [Definition](#definition)
+        - [Usage](#usage-1)
+    - [Helpers](#helpers)
+- [Devlopment](#devlopment)
+    - [Installation](#tnstallation)
+    - [Tests](#tests)
 - [License](#license)
 
 <!-- TOC END -->
@@ -52,6 +52,7 @@ const model = vegeData.model.init({
     fields: ['id', 'name', 'status', ... ],
     table: <my table>,
     primaryKey: 'rowId' // by default
+    orderBy: 'rowId ASC' // by default
 })
 ```
 

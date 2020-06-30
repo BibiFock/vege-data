@@ -22,10 +22,10 @@ const makeQueries = ({ fields, table }) => {
   };
 };
 
-const makeGetter = ({ exec, queries, primaryKey }) => ({
+const makeGetter = ({ exec, queries, primaryKey, orderBy }) => ({
   all: () => exec(
     'all',
-    queries.select()
+    queries.select().append(orderBy)
   ),
   get: id => exec('get', queries.select()
     .append(' WHERE ' + primaryKey + '=')
@@ -36,6 +36,7 @@ const makeGetter = ({ exec, queries, primaryKey }) => ({
       .append(' WHERE ' + primaryKey + ' IN (')
       .append(concatValues(ids))
       .append(')')
+      .append(orderBy);
 
     return exec('all', query);
   },
@@ -44,6 +45,7 @@ const makeGetter = ({ exec, queries, primaryKey }) => ({
     queries.select()
       .append(' WHERE ' + field + ' =')
       .append(SQL`${value}`)
+      .append(orderBy)
   )
 });
 
@@ -74,6 +76,7 @@ const makeStore = ({ exec, queries, fields }) => {
  * @param {array} _.fields - fields list
  * @param {string} _.table - table name
  * @param {string} [_.primaryKey=rowId] primary key
+ * @param {string} [_.orderBy=rowId] primary key
  *
  * @return {object}
  */
@@ -82,14 +85,16 @@ const init = ({ connect, log }) => (config) => {
     fields,
     table,
     primaryKey = 'rowid',
+    orderBy = 'rowid'
   } = config;
   const exec = makeExec({ connect, log })
+  const defaultOrder = ` ORDER BY ${orderBy}`;
   const queries = makeQueries({ fields, table });
 
   return {
     config,
     queries,
-    ...makeGetter({ exec, queries, primaryKey }),
+    ...makeGetter({ exec, queries, primaryKey, orderBy: defaultOrder }),
     ...makeStore({ exec, queries, fields })
   };
 };
