@@ -5,16 +5,21 @@ import SQL from 'sql-template-strings';
  * [1, 2, 3] => SQL'${1}, ${2}, ${3}';
  *
  * @param {array} items
- * @param {func} each function call for each elements
+ * @param {func} each function call for each elements (by default add value)
+ * @param {func} concat function call for each join action (by default add ', ')
  *
  * @return object sql template string
  */
-export const concatValues = (items, each) => {
+export const concatValues = (
+  items,
+  each = (item) => SQL`${item}`,
+  concat = index => index > 0 ? ', ' : ''
+) => {
   const query = SQL``;
   items.forEach(
     (item, index) => query
-      .append(index > 0 ? ', ' : '')
-      .append(each ? each(item) : SQL`${item}`)
+      .append(concat(index))
+      .append(each(item))
   );
   return query;
 };

@@ -71,6 +71,7 @@ model.all() // return all component
 model.get(id);
 model.getAll(ids);
 model.findBy(field, value);
+model.findByProps({ field: value, otherField: [value1, value2] });
 model.save(data);
 models.saveAll(datas)
 ```

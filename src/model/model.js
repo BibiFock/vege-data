@@ -46,6 +46,28 @@ const makeGetter = ({ exec, queries, primaryKey, orderBy }) => ({
       .append(' WHERE ' + field + ' =')
       .append(SQL`${value}`)
       .append(orderBy)
+  ),
+  findByProps: (props) => exec(
+    'all',
+    queries.select()
+      .append(concatValues(
+        Object.keys(props),
+        field => {
+          const fieldQuery = SQL` `.append(field);
+          const value = props[field];
+          if (Array.isArray(value)) {
+            fieldQuery
+              .append(' IN (')
+              .append(concatValues(value))
+              .append(') ');
+          } else {
+            fieldQuery.append(SQL`=${value}`)
+          }
+
+          return fieldQuery;
+        },
+        index => index === 0 ? ' WHERE ' : ' AND '
+      )).append(orderBy)
   )
 });
 

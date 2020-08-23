@@ -91,6 +91,25 @@ describe('Model->getters', () => {
     });
   });
 
+  describe('findByProps', () => {
+    it('should return all elements with wanted props', () => {
+      expect(
+        model.findByProps({ type: 'sayan', name: 'sangoku' })
+      ).resolves.toEqual([
+        { name: 'sangoku', type: 'sayan' }
+      ]);
+    });
+
+    it('should return handle array value', () => {
+      expect(
+        model.findByProps({ type: ['human', 'namek'] })
+      ).resolves.toEqual([
+        { name: 'piccolo', type: 'namek' },
+        { name: 'bulma', type: 'human' }
+      ]);
+    });
+  });
+
   describe('orderBy, should sort answer for multiple response', () => {
     describe.each([
       'ASC',
@@ -109,11 +128,17 @@ describe('Model->getters', () => {
       it.each([
         ['all', '', []],
         ['getAll', `WHERE name IN ('vegeta', 'goku')`, [['vegeta', 'goku']]],
-        ['findBy', `WHERE type = 'sayan'`, ['type','sayan']]
+        ['findBy', `WHERE type = 'sayan'`, ['type','sayan']],
+        ['findByProps', `WHERE type = 'sayan'`, { type: 'sayan' }]
       ])('%s', async (func, conds, args) => {
-        const wanted = await db.all(`SELECT name, type FROM characters ${conds} ORDER BY name ${order}`),
+        const wanted = await db.all(`SELECT name, type FROM characters ${conds} ORDER BY name ${order}`);
 
-        result = await model[func](...args);
+        let result;
+        if (Array.isArray(args)) {
+          result = await model[func](...args);
+        } else {
+          result = await model[func](args);
+        }
 
         expect(result).toEqual(wanted);
       });
