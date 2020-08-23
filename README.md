@@ -46,7 +46,7 @@ vegeData.migrate()
 
 ## Model
 
-### Defintion
+### Definition
 ```js
 const model = vegeData.model.init({
     fields: ['id', 'name', 'status', ... ],
@@ -85,14 +85,25 @@ import { helpers } from 'vege-data';
 // concat value
 model.queries.select()
  .append(' WHERE id IN (')
- .append(helpers.concatValue([1, 2, 3]))
+ .append(helpers.concatValues([1, 2, 3]))
 
 // custom element
 const items = [{ id: 1}, { id: 2 }];
 model.queries.select()
  .append(' WHERE id IN (')
- .append(helpers.concatValue(items, ({ id }) => id))
+ .append(helpers.concatValues(items, ({ id }) => id))
  .append(')');
+
+// custom join
+const conds = { name: 'goku', type: 'sayan' };
+model.queries.select()
+  .append(
+    helpers.concatValues(
+        Object.keys(conds),
+        (key) => conds[key],
+        (index) => i > 0 ? ' AND ' : ' WHERE '
+    )
+   )
 
 ```
 
