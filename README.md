@@ -63,15 +63,17 @@ const model = vegeData.model.init({
 model.config
 
 // queries helpers
+model.queries.raw.select // simple query select string
 model.queries.select() // return sql-template-string object used for a standard select
+
+model.queries.raw.insertOrReplace // simple inster or replace query string
 model.queries.insertOrReplace() // return sql-template-string object used for save
 
 // function
 model.all() // return all component
+model.allByKeys(ids);
+model.allByProps({ field: value, otherField: [value1, value2] });
 model.get(id);
-model.getAll(ids);
-model.findBy(field, value);
-model.findByProps({ field: value, otherField: [value1, value2] });
 model.save(data);
 models.saveAll(datas)
 ```
@@ -80,25 +82,26 @@ models.saveAll(datas)
 ## Helpers
 
 ```js
-import { helpers } from 'vege-data';
+import { concatValues } from 'vege-data';
 
 // concat value
 model.queries.select()
  .append(' WHERE id IN (')
- .append(helpers.concatValues([1, 2, 3]))
+ .append(concatValues([1, 2, 3]))
+ .append(')');
 
 // custom element
 const items = [{ id: 1}, { id: 2 }];
 model.queries.select()
  .append(' WHERE id IN (')
- .append(helpers.concatValues(items, ({ id }) => id))
+ .append(concatValues(items, ({ id }) => id))
  .append(')');
 
 // custom join
 const conds = { name: 'goku', type: 'sayan' };
 model.queries.select()
   .append(
-    helpers.concatValues(
+    concatValues(
         Object.keys(conds),
         (key) => conds[key],
         (index) => i > 0 ? ' AND ' : ' WHERE '

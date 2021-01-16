@@ -61,7 +61,7 @@ describe('Model->getters', () => {
     });
   });
 
-  describe('getAll', () => {
+  describe('allByKeys', () => {
     const couple = [
       { name: 'vegeta', type:'sayan' },
       { name: 'bulma', type: 'human' }
@@ -73,28 +73,17 @@ describe('Model->getters', () => {
           table: 'characters',
           fields: ['name', 'type'],
           primaryKey: 'name'
-        }).getAll(couple.map(({ name }) => name))
+        }).allByKeys(couple.map(({ name }) => name))
       ).resolves.toEqual(
         couple
       );
     });
   });
 
-  describe('findBy', () => {
-    it('should return all element with a value', () => {
-      expect(
-        model.findBy('type', 'sayan')
-      ).resolves.toEqual([
-        { name: 'vegeta', type: 'sayan' },
-        { name: 'sangoku', type: 'sayan' }
-      ]);
-    });
-  });
-
-  describe('findByProps', () => {
+  describe('allByProps', () => {
     it('should return all elements with wanted props', () => {
       expect(
-        model.findByProps({ type: 'sayan', name: 'sangoku' })
+        model.allByProps({ type: 'sayan', name: 'sangoku' })
       ).resolves.toEqual([
         { name: 'sangoku', type: 'sayan' }
       ]);
@@ -102,11 +91,36 @@ describe('Model->getters', () => {
 
     it('should return handle array value', () => {
       expect(
-        model.findByProps({ type: ['human', 'namek'] })
+        model.allByProps({ type: ['human', 'namek'] })
       ).resolves.toEqual([
         { name: 'piccolo', type: 'namek' },
         { name: 'bulma', type: 'human' }
       ]);
+    });
+  });
+
+  describe('getByProps', () => {
+    it('should return all elements with wanted props', () => {
+      expect(
+        model.getByProps({ type: 'sayan', name: 'sangoku' })
+      ).resolves.toEqual({
+        name: 'sangoku',
+        type: 'sayan'
+      });
+    });
+
+    it('should handle array value', () => {
+      expect(
+        model.getByProps({ type: ['human', 'namek'] })
+      ).resolves.toEqual(
+        { name: 'piccolo', type: 'namek' }
+      );
+    });
+
+    it('should return false value when nothing found', () => {
+      expect(
+        model.getByProps({ type: 'another-fucking-alien' })
+      ).resolves.toBeFalsy();
     });
   });
 
@@ -127,9 +141,8 @@ describe('Model->getters', () => {
 
       it.each([
         ['all', '', []],
-        ['getAll', `WHERE name IN ('vegeta', 'goku')`, [['vegeta', 'goku']]],
-        ['findBy', `WHERE type = 'sayan'`, ['type','sayan']],
-        ['findByProps', `WHERE type = 'sayan'`, { type: 'sayan' }]
+        ['allByKeys', `WHERE name IN ('vegeta', 'goku')`, [['vegeta', 'goku']]],
+        ['allByProps', `WHERE type = 'sayan'`, { type: 'sayan' }]
       ])('%s', async (func, conds, args) => {
         const wanted = await db.all(`SELECT name, type FROM characters ${conds} ORDER BY name ${order}`);
 

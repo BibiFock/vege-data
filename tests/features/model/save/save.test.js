@@ -82,7 +82,7 @@ describe('Model->save', () => {
           await model.saveAll(data)
         ).toBe(true);
 
-        result = await model.getAll(
+        result = await model.allByKeys(
           data.map(({ name }) => name)
         );
       });

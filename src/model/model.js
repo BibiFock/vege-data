@@ -14,40 +14,21 @@ const makeExec = ({ connect, log }) => (action, query) => connect()
 const makeQueries = ({ fields, table }) => {
   const fieldsList = fields.join(', ');
 
+  const raw = {
+    insertOrReplace: `INSERT OR REPLACE INTO ${table} (${fieldsList}) VALUES `,
+    select: `SELECT ${fieldsList} FROM ${table}`
+  };
+
+
   return {
-    insertOrReplace: () => SQL`INSERT OR REPLACE INTO `
-      .append(table + '(' + fieldsList + ') VALUES'),
-    select: () => SQL`SELECT `
-      .append(fieldsList + ' FROM ' + table)
+    raw,
+    insertOrReplace: () => SQL``.append(raw.insertOrReplace),
+    select: () => SQL``.append(raw.select)
   };
 };
 
-const makeGetter = ({ exec, queries, primaryKey, orderBy }) => ({
-  all: () => exec(
-    'all',
-    queries.select().append(orderBy)
-  ),
-  get: id => exec('get', queries.select()
-    .append(' WHERE ' + primaryKey + '=')
-    .append(SQL`${id}`)
-  ),
-  getAll: ids => {
-    const query = queries.select()
-      .append(' WHERE ' + primaryKey + ' IN (')
-      .append(concatValues(ids))
-      .append(')')
-      .append(orderBy);
-
-    return exec('all', query);
-  },
-  findBy: (field, value) => exec(
-    'all',
-    queries.select()
-      .append(' WHERE ' + field + ' =')
-      .append(SQL`${value}`)
-      .append(orderBy)
-  ),
-  findByProps: (props) => exec(
+const makeGetter = ({ exec, queries, primaryKey, orderBy }) => {
+  const allByProps = (props) => exec(
     'all',
     queries.select()
       .append(concatValues(
@@ -68,8 +49,35 @@ const makeGetter = ({ exec, queries, primaryKey, orderBy }) => ({
         },
         index => index === 0 ? ' WHERE ' : ' AND '
       )).append(orderBy)
-  )
-});
+  );
+
+  return {
+    all: () => exec(
+      'all',
+      queries.select().append(orderBy)
+    ),
+    get: id => exec('get', queries.select()
+      .append(' WHERE ' + primaryKey + '=')
+      .append(SQL`${id}`)
+    ),
+    allByKeys: ids => {
+      const query = queries.select()
+        .append(' WHERE ' + primaryKey + ' IN (')
+        .append(concatValues(ids))
+        .append(')')
+        .append(orderBy);
+
+      return exec('all', query);
+    },
+    allByProps,
+    getByProps: (...args) => allByProps(...args)
+      .then(r => {
+        if (r.length) {
+          return r[0];
+        }
+      })
+  };
+};
 
 const makeStore = ({ exec, queries, fields }) => {
   const getValues = (val) => SQL`(`
