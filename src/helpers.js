@@ -13,14 +13,15 @@ import SQL from 'sql-template-strings';
 export const concatValues = (
   items,
   each = (item) => SQL`${item}`,
-  concat = index => index > 0 ? ', ' : ''
+  concat = index => index > 0 ? ', ' : '',
+  query = SQL``
 ) => {
-  const query = SQL``;
   items.forEach(
     (item, index) => query
       .append(concat(index))
       .append(each(item))
   );
+
   return query;
 };
 
