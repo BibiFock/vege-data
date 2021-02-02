@@ -31,15 +31,15 @@ const makeGetter = ({ exec, queries, primaryKey, orderBy }) => {
   const allByProps = (props) => exec(
     'all',
     queries.select()
-      .append(concatValues(
-        Object.keys(props),
-        field => {
+      .append(concatValues({
+        items: Object.keys(props),
+        each: field => {
           const fieldQuery = SQL` `.append(field);
           const value = props[field];
           if (Array.isArray(value)) {
             fieldQuery
               .append(' IN (')
-              .append(concatValues(value))
+              .append(concatValues({ items: value }))
               .append(') ');
           } else {
             fieldQuery.append(SQL`=${value}`)
@@ -47,8 +47,8 @@ const makeGetter = ({ exec, queries, primaryKey, orderBy }) => {
 
           return fieldQuery;
         },
-        index => index === 0 ? ' WHERE ' : ' AND '
-      )).append(orderBy)
+        concat: index => index === 0 ? ' WHERE ' : ' AND '
+      })).append(orderBy)
   );
 
   return {
@@ -63,7 +63,7 @@ const makeGetter = ({ exec, queries, primaryKey, orderBy }) => {
     allByKeys: ids => {
       const query = queries.select()
         .append(' WHERE ' + primaryKey + ' IN (')
-        .append(concatValues(ids))
+        .append(concatValues({ items: ids }))
         .append(')')
         .append(orderBy);
 
@@ -82,7 +82,10 @@ const makeGetter = ({ exec, queries, primaryKey, orderBy }) => {
 const makeStore = ({ exec, queries, fields }) => {
   const getValues = (val) => SQL`(`
     .append(
-      concatValues(fields, f => SQL`${val[f]}`)
+      concatValues({
+        items: fields,
+        each: f => SQL`${val[f]}`
+      })
     ).append(')');
 
   return {
@@ -95,8 +98,13 @@ const makeStore = ({ exec, queries, fields }) => {
     saveAll: (items) => exec(
       'run',
       queries.insertOrReplace()
-        .append(concatValues(items, getValues))
-      ).then(({ changes }) => changes === items.length)
+      .append(
+        concatValues({
+          items,
+          each: getValues
+        })
+      )
+    ).then(({ changes }) => changes === items.length)
   }
 };
 
